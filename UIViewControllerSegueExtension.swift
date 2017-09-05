@@ -14,7 +14,7 @@ private var associatedSegueIdentifier: String?
 private var associatedCompletionHandler: ((UIViewController) -> ())?
 
 public extension UIViewController {
-
+	
 	private static var isPrepareForSegueSwizzled: Bool {
 		get {
 			return objc_getAssociatedObject(self, &associatedSwizzleState) as? Bool ?? false
@@ -51,7 +51,7 @@ public extension UIViewController {
 		}
 	}
 	
-	public func perform(segue identifier: String, prepare prepareHandler: ((UIViewController) -> ())? = nil) {
+	public func perform<T>(segue identifier: String, prepare prepareHandler: ((T) -> ())? = nil) {
 		
 		if !UIViewController.isPrepareForSegueSwizzled {
 			let originalSelector = #selector(UIViewController.prepare(for:sender:))
@@ -61,19 +61,21 @@ public extension UIViewController {
 			let swizzledMethod = class_getInstanceMethod(UIViewController.self, swizzledSelector)
 			
 			method_exchangeImplementations(originalMethod, swizzledMethod)
-
+			
 			UIViewController.isPrepareForSegueSwizzled = true
 		}
 		
 		self.performingSegueIdentifier = identifier
-		self.performingSegueCompletionHandler = prepareHandler
+		self.performingSegueCompletionHandler = { viewController in
+			(viewController as? T).map { prepareHandler?($0) }
+		}
 		
 		self.performSegue(withIdentifier: identifier, sender: self)
 	}
-
+	
 	@objc private func swizzledPrepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if let performingSegueIdentifier = self.performingSegueIdentifier,
-		   segue.identifier == performingSegueIdentifier
+			segue.identifier == performingSegueIdentifier
 		{
 			self.performingSegueIdentifier = nil
 			
@@ -85,5 +87,5 @@ public extension UIViewController {
 			self.swizzledPrepare(for: segue, sender: self)
 		}
 	}
-
+	
 }
