@@ -9,45 +9,44 @@
 
 import UIKit
 
-private var associatedSwizzleState = false
-private var associatedSegueIdentifier: String?
-private var associatedCompletionHandler: ((UIViewController) -> ())?
+private typealias SegueHandler = (UIViewController) -> ()
+
+private var kAssociatedSwizzleState = false
+private var kAssociatedSegueData = "associatedSegueData"
+
+private class SegueHandlerData {
+	let segueIdentifier: String
+	let segueHandler: SegueHandler?
+	
+	init (segueIdentifier: String, segueHandler: SegueHandler? = nil) {
+		self.segueIdentifier = segueIdentifier
+		self.segueHandler = segueHandler
+	}
+}
 
 public extension UIViewController {
 	
 	private static var isPrepareForSegueSwizzled: Bool {
 		get {
-			return objc_getAssociatedObject(self, &associatedSwizzleState) as? Bool ?? false
+			return objc_getAssociatedObject(self, &kAssociatedSwizzleState) as? Bool ?? false
 		}
 		set {
 			objc_setAssociatedObject(self,
-			                         &associatedSwizzleState,
+			                         &kAssociatedSwizzleState,
 			                         newValue,
 			                         objc_AssociationPolicy.OBJC_ASSOCIATION_ASSIGN)
 		}
 	}
 	
-	private var performingSegueIdentifier: String? {
+	private var performingSegueData: SegueHandlerData? {
 		get {
-			return objc_getAssociatedObject(self, &associatedSegueIdentifier) as? String
+			return objc_getAssociatedObject(self, &kAssociatedSegueData) as? SegueHandlerData
 		}
 		set {
 			objc_setAssociatedObject(self,
-			                         &associatedSegueIdentifier,
+			                         &kAssociatedSegueData,
 			                         newValue,
-			                         objc_AssociationPolicy.OBJC_ASSOCIATION_COPY)
-		}
-	}
-	
-	private var performingSegueCompletionHandler: ((UIViewController) -> ())? {
-		get {
-			return objc_getAssociatedObject(self, &associatedCompletionHandler) as? ((UIViewController) -> ())
-		}
-		set {
-			objc_setAssociatedObject(self,
-			                         &associatedCompletionHandler,
-			                         newValue,
-			                         objc_AssociationPolicy.OBJC_ASSOCIATION_COPY)
+			                         objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
 		}
 	}
 	
@@ -57,16 +56,16 @@ public extension UIViewController {
 			let originalSelector = #selector(UIViewController.prepare(for:sender:))
 			let swizzledSelector = #selector(UIViewController.swizzledPrepare(for:sender:))
 			
-			let originalMethod = class_getInstanceMethod(UIViewController.self, originalSelector)
-			let swizzledMethod = class_getInstanceMethod(UIViewController.self, swizzledSelector)
+			let originalMethod = class_getInstanceMethod(self.classForCoder, originalSelector)
+			let swizzledMethod = class_getInstanceMethod(self.classForCoder, swizzledSelector)
 			
 			method_exchangeImplementations(originalMethod, swizzledMethod)
 			
 			UIViewController.isPrepareForSegueSwizzled = true
 		}
 		
-		self.performingSegueIdentifier = identifier
-		self.performingSegueCompletionHandler = { viewController in
+		self.performingSegueData = SegueHandlerData(segueIdentifier: identifier) {
+			(viewController: UIViewController) in
 			(viewController as? T).map { prepareHandler?($0) }
 		}
 		
@@ -74,18 +73,15 @@ public extension UIViewController {
 	}
 	
 	@objc private func swizzledPrepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if let performingSegueIdentifier = self.performingSegueIdentifier,
-			segue.identifier == performingSegueIdentifier
-		{
-			self.performingSegueIdentifier = nil
-			
-			self.performingSegueCompletionHandler?(segue.destination)
-			
-			self.performingSegueCompletionHandler = nil
+		if let performingSegueData = self.performingSegueData {
+			if performingSegueData.segueIdentifier == segue.identifier {
+				performingSegueData.segueHandler?(segue.destination)
+				
+				self.performingSegueData = nil
+			}
 		}
 		else {
 			self.swizzledPrepare(for: segue, sender: self)
 		}
 	}
-	
 }
