@@ -41,9 +41,9 @@ To this:
 func openFooScreen() {
 
 	self.perform(segue: "fooSegue") { (fooController: FooViewController) in
-			let settings = Settings()
-			fooController.settings = settings
-		}
+		let settings = Settings()
+		fooController.settings = settings
+	}
 }
 
 ```
