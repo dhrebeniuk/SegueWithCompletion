@@ -27,7 +27,7 @@ override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 	if let fooController = segue.destination as? FooViewController, 
 	 segue.identifier == "fooSegue" 
 	{
-		fooController.gaugeDecibelMeterViewModel = settings
+		fooController.settings = settings
 	}
 }
 
@@ -42,7 +42,7 @@ func openFooScreen() {
 
 	self.perform(segue: "fooSegue") { (fooController: FooViewController) in
 			let settings = Settings()
-			fooController.gaugeDecibelMeterViewModel = settings
+			fooController.settings = settings
 		}
 }
 
