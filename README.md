@@ -5,7 +5,7 @@ SegueWithCompletion is UIViewController extension that provides ability use perf
 ## Installation
 Via [CocoaPods](http://cocoapods.org):
 ```ruby
-	pod 'SegueWithCompletion', :git => "https://github.com/dhrebeniuk/SegueWithCompletion.git"
+pod 'SegueWithCompletion', :git => "https://github.com/dhrebeniuk/SegueWithCompletion.git"
 
 ```
 
@@ -27,6 +27,7 @@ override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 	if let fooController = segue.destination as? FooViewController, 
 	 segue.identifier == "fooSegue" 
 	{
+		let settings = Settings()
 		fooController.settings = settings
 	}
 }
