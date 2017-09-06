@@ -1,6 +1,6 @@
 # SegueWithCompletion
 
-SegueWithCompletion is UIViewController extension that provides ability use performSegue method and clarify setup parameters without override prepareForSegue method.
+SegueWithCompletion is UIViewController extension that provides ability perform segue and clarify setup viewcontroller parameters without override prepareForSegue method.
 
 ## Installation
 Via [CocoaPods](http://cocoapods.org):
