@@ -13,23 +13,18 @@ pod 'SegueWithCompletion', :git => "https://github.com/dhrebeniuk/SegueWithCompl
 
 ### Storyboard Usage
 
-Change change perform your's segues from this:
+Change perform your's segues from this:
 
 ```swift
 
 func openFooScreen() {
-
-	self.performSegue(withIdentifier: "fooSegue", sender: nil);
+    self.performSegue(withIdentifier: "fooSegue", sender: nil);
 }
 
 override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-
-	if let fooController = segue.destination as? FooViewController, 
-	 segue.identifier == "fooSegue" 
-	{
-		let settings = Settings()
-		fooController.settings = settings
-	}
+    if let fooController = segue.destination as? FooViewController, segue.identifier == "fooSegue" {
+        fooController.settings = Settings()
+    }
 }
 
 
@@ -40,11 +35,9 @@ To this:
 ```swift
 
 func openFooScreen() {
-
-	self.perform(segue: "fooSegue") { (fooController: FooViewController) in
-		let settings = Settings()
-		fooController.settings = settings
-	}
+    self.perform(segue: "fooSegue") { (fooController: FooViewController) in
+	fooController.settings = Settings()
+    }
 }
 
 ```
