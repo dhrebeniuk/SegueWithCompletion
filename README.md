@@ -55,11 +55,11 @@ func openBarScreen() {
 }
 
 override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-	if let barNavigationController = segue.destination as? UINavigationController, segue.identifier == "fooSegue" {
-		if let barController = barNavigationController.topViewController as? BarViewController {
-			barController.settings = Settings()
-		}
-	}
+    if let barNavigationController = segue.destination as? UINavigationController, segue.identifier == "fooSegue" {
+        if let barController = barNavigationController.topViewController as? BarViewController {
+            barController.settings = Settings()
+        }
+    }
 }
 
 
@@ -70,9 +70,9 @@ To this:
 ```swift
 
 func openBarScreen() {
-	self.perform(segue: "barSegue", prepareWithNavigation: { (barController: BarViewController) in
-		barController.settings = Settings()
-	})
+    self.perform(segue: "barSegue", prepareWithNavigation: { (barController: BarViewController) in
+        barController.settings = Settings()
+    })
 }
 
 ```
