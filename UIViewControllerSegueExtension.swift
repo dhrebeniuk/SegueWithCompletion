@@ -14,12 +14,14 @@ private typealias SegueHandler = (UIViewController) -> ()
 private var kAssociatedSwizzleState = false
 private var kAssociatedSegueData = "associatedSegueData"
 
-private class SegueHandlerData {
-	let segueIdentifier: String
-	let segueHandler: SegueHandler?
+fileprivate class SegueHandlerData {
+	fileprivate let segueIdentifier: String
+	fileprivate let isSegueWithNavigationController: Bool
+	fileprivate let segueHandler: SegueHandler?
 	
-	init (segueIdentifier: String, segueHandler: SegueHandler? = nil) {
+	init (segueIdentifier: String,  isSegueWithNavigationController: Bool = false, segueHandler: SegueHandler? = nil) {
 		self.segueIdentifier = segueIdentifier
+		self.isSegueWithNavigationController = isSegueWithNavigationController
 		self.segueHandler = segueHandler
 	}
 }
@@ -51,7 +53,28 @@ public extension UIViewController {
 	}
 	
 	public func perform<T>(segue identifier: String, prepare prepareHandler: ((T) -> ())? = nil) {
+		self.swizzleFrepareForSegueIfNeeded()
 		
+		self.performingSegueData = SegueHandlerData(segueIdentifier: identifier) {
+			(viewController: UIViewController) in
+			(viewController as? T).map { prepareHandler?($0) }
+		}
+		
+		self.performSegue(withIdentifier: identifier, sender: self)
+	}
+	
+	public func perform<T>(segue identifier: String, prepareWithNavigation prepareHandler: ((T) -> ())? = nil) {
+		self.swizzleFrepareForSegueIfNeeded()
+		
+		self.performingSegueData = SegueHandlerData(segueIdentifier: identifier, isSegueWithNavigationController: true) {
+			(viewController: UIViewController) in
+			(viewController as? T).map { prepareHandler?($0) }
+		}
+		
+		self.performSegue(withIdentifier: identifier, sender: self)
+	}
+	
+	private func swizzleFrepareForSegueIfNeeded() {
 		if !UIViewController.isPrepareForSegueSwizzled {
 			let originalSelector = #selector(UIViewController.prepare(for:sender:))
 			let swizzledSelector = #selector(UIViewController.swizzledPrepare(for:sender:))
@@ -63,19 +86,24 @@ public extension UIViewController {
 			
 			UIViewController.isPrepareForSegueSwizzled = true
 		}
-		
-		self.performingSegueData = SegueHandlerData(segueIdentifier: identifier) {
-			(viewController: UIViewController) in
-			(viewController as? T).map { prepareHandler?($0) }
-		}
-		
-		self.performSegue(withIdentifier: identifier, sender: self)
 	}
 	
 	@objc private func swizzledPrepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if let performingSegueData = self.performingSegueData {
 			if performingSegueData.segueIdentifier == segue.identifier {
-				performingSegueData.segueHandler?(segue.destination)
+				
+				let isSegueWithNavigationController = self.performingSegueData?.isSegueWithNavigationController ?? false
+				
+				if isSegueWithNavigationController {
+					_ = (segue.destination as? UINavigationController).map() { navigationController in
+						navigationController.topViewController.map() { destinationViewController in
+							performingSegueData.segueHandler?(destinationViewController)
+						}
+					}
+				}
+				else {
+					performingSegueData.segueHandler?(segue.destination)
+				}
 				
 				self.performingSegueData = nil
 			}

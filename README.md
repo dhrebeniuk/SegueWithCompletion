@@ -9,9 +9,10 @@ pod 'SegueWithCompletion', :git => "https://github.com/dhrebeniuk/SegueWithCompl
 
 ```
 
-## Usage
+## Storyboard Usage
 
-### Storyboard Usage
+### Present UIViewContreoller
+
 
 Change perform your's segues from this:
 
@@ -36,13 +37,45 @@ To this:
 
 func openFooScreen() {
     self.perform(segue: "fooSegue") { (fooController: FooViewController) in
-	fooController.settings = Settings()
+		fooController.settings = Settings()
     }
 }
 
 ```
 
-Done!
+### Present UIViewContreoller with UINavigationController
+
+
+Change perform your's segues from this:
+
+```swift
+
+func openBarScreen() {
+	self.performSegue(withIdentifier: "barSegue", sender: nil);
+}
+
+override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+	if let barNavigationController = segue.destination as? UINavigationController, segue.identifier == "fooSegue" {
+		if let barController = barNavigationController.topViewController as? BarViewController {
+			barController.settings = Settings()
+		}
+	}
+}
+
+
+```
+
+To this:
+
+```swift
+
+func openBarScreen() {
+	self.perform(segue: "barSegue", prepareWithNavigation: { (barController: BarViewController) in
+		barController.settings = Settings()
+	})
+}
+
+```
 
 ## Compatibility/Restrictions
 * iOS8+ only
