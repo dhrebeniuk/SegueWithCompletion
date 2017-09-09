@@ -51,7 +51,7 @@ Change perform your's segues from this:
 ```swift
 
 func openBarScreen() {
-	self.performSegue(withIdentifier: "barSegue", sender: nil);
+    self.performSegue(withIdentifier: "barSegue", sender: nil);
 }
 
 override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
