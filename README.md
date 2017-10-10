@@ -70,7 +70,7 @@ To this:
 ```swift
 
 func openBarScreen() {
-    self.perform(segue: "barSegue", prepareWithNavigation: { (barController: BarViewController) in
+    self.performWithNavigationController(segue: "barSegue") { (barController: BarViewController) in
         barController.settings = Settings()
     })
 }
