@@ -1,0 +1,16 @@
+PODS:
+  - SegueWithCompletion (0.1.4)
+
+DEPENDENCIES:
+  - SegueWithCompletion (from `..`)
+
+EXTERNAL SOURCES:
+  SegueWithCompletion:
+    :path: ..
+
+SPEC CHECKSUMS:
+  SegueWithCompletion: 2cfae3b3d259022d5c1d8d5f645f4e2718c5ce9f
+
+PODFILE CHECKSUM: 6107ebd48fd7c0e77563758607e61844f2bcc6e8
+
+COCOAPODS: 1.2.1

@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "SegueWithCompletion"
-  s.version      = "0.1.3"
+  s.version      = "0.1.4"
   s.summary      = "Extension for UIViewController for ability perform segue with completion handler for avoid override prepareForSegue method."
   s.description  = "Extension for UIViewController for ability perform segue with completion handler for	avoid override prepareForSegue method."
 

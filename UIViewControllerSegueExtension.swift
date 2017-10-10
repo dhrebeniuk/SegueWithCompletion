@@ -63,7 +63,7 @@ public extension UIViewController {
 		self.performSegue(withIdentifier: identifier, sender: self)
 	}
 	
-	public func perform<T>(segue identifier: String, prepareWithNavigation prepareHandler: ((T) -> ())? = nil) {
+	public func performWithNavigationController<T>(segue identifier: String, prepare prepareHandler: ((T) -> ())? = nil) {
 		self.swizzleFrepareForSegueIfNeeded()
 		
 		self.performingSegueData = SegueHandlerData(segueIdentifier: identifier, isSegueWithNavigationController: true) {
