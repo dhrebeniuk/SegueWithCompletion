@@ -1,0 +1,7 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+target "SegueWithCompletionExample" do
+	platform :ios, '9.3'
+	use_frameworks!
+	pod 'SegueWithCompletion', :path => ".."
+end
