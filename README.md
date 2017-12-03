@@ -5,7 +5,7 @@ SegueWithCompletion is UIViewController extension that provides ability perform 
 ## Installation
 Via [CocoaPods](http://cocoapods.org):
 ```ruby
-pod 'SegueWithCompletion', :git => "https://github.com/dhrebeniuk/SegueWithCompletion.git"
+pod 'SegueWithCompletion'
 
 ```
 
@@ -70,7 +70,7 @@ To this:
 ```swift
 
 func openBarScreen() {
-    self.perform(segue: "barSegue", prepareWithNavigation: { (barController: BarViewController) in
+    self.performWithNavigationController(segue: "barSegue") { (barController: BarViewController) in
         barController.settings = Settings()
     })
 }
