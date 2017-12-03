@@ -82,7 +82,11 @@ public extension UIViewController {
 			let originalMethod = class_getInstanceMethod(self.classForCoder, originalSelector)
 			let swizzledMethod = class_getInstanceMethod(self.classForCoder, swizzledSelector)
 			
-			method_exchangeImplementations(originalMethod, swizzledMethod)
+			originalMethod.map() { originalMethod in
+				swizzledMethod.map() { swizzledMethod in
+					method_exchangeImplementations(originalMethod, swizzledMethod)
+				}
+			}
 			
 			UIViewController.isPrepareForSegueSwizzled = true
 		}
