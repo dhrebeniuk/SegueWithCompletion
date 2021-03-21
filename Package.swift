@@ -7,9 +7,9 @@ let package = Package(name: "SegueWithCompletion",
                       products: [.library(name: "SegueWithCompletion",
                                           targets: ["SegueWithCompletion"])],
                       targets: [
-                            .target(name: "SegueWithCompletionExample",
-                            path: ".",
-                            exclude: ["AppDelegate.swift", "ModalScreenViewController.swift", "MainScreenViewController.swift", "DetailsScreenViewController.swift", "ModelObject.swift", "Main.storyboard", "LaunchScreen.storyboard", "Info.plist"])
+                            .target(name: "SegueWithCompletion",
+                            path: "."),
+                            .testTarget(name: "SegueWithCompletionExample", dependencies: ["SegueWithCompletion"],  path: "./SegueWithCompletionExample")
                       ],
                       swiftLanguageVersions: [.v5])
                       
