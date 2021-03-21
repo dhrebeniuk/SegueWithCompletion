@@ -1,16 +1,16 @@
 PODS:
-  - SegueWithCompletion (0.1.5)
+  - SegueWithCompletion (0.1.7)
 
 DEPENDENCIES:
   - SegueWithCompletion (from `..`)
 
 EXTERNAL SOURCES:
   SegueWithCompletion:
-    :path: ..
+    :path: ".."
 
 SPEC CHECKSUMS:
-  SegueWithCompletion: 5d7276368728bbf89f5ea01a143f386e47526b95
+  SegueWithCompletion: 3543754dbef9a2f00d1a64404b45e0f94dbce1de
 
 PODFILE CHECKSUM: 6107ebd48fd7c0e77563758607e61844f2bcc6e8
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.10.0
