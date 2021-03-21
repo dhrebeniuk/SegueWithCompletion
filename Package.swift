@@ -8,8 +8,7 @@ let package = Package(name: "SegueWithCompletion",
                                           targets: ["SegueWithCompletion"])],
                       targets: [
                             .target(name: "SegueWithCompletion",
-                            path: "."),
-                            .testTarget(name: "SegueWithCompletionExample", dependencies: ["SegueWithCompletion"],  path: "./SegueWithCompletionExample")
+                            path: ".", exclude: ["SegueWithCompletionExample"])
                       ],
                       swiftLanguageVersions: [.v5])
                       
