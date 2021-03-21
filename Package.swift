@@ -2,6 +2,7 @@
 import PackageDescription
 
 let package = Package(name: "SegueWithCompletion",
+                      defaultLocalization: "en",
                       platforms: [.iOS(.v8)],
                       products: [.library(name: "SegueWithCompletion",
                                           targets: ["SegueWithCompletion"])],
